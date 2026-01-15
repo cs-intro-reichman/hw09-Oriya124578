@@ -33,26 +33,23 @@ public class LanguageModel {
 
     /** Builds a language model from the text in the given file (the corpus). */
 	public void train(String fileName) {
-		// Your code goes here
         String window = "";
         char c;
         In in = new In(fileName);
+        
         for (int i = 0; i < windowLength; i++) {
-            if (!in.isEmpty()) {
-                window += in.readChar();
-            }
+            if (in.isEmpty()) return;
+            window += in.readChar();
         }
 
         while (!in.isEmpty()) {
             c = in.readChar();
             
             List probs = CharDataMap.get(window);
-            
             if (probs == null) {
                 probs = new List();
                 CharDataMap.put(window, probs);
             }
-
             probs.update(c);
             
             window = window.substring(1) + c;
@@ -109,8 +106,7 @@ public class LanguageModel {
 	 * @param numberOfLetters - the size of text to generate
 	 * @return the generated text
 	 */
-	public String generate(String initialText, int textLength) {
-		// Your code goes here
+    public String generate(String initialText, int textLength) {
         if (initialText.length() < windowLength) {
             return initialText;
         }
@@ -127,13 +123,12 @@ public class LanguageModel {
 
             char c = getRandomChar(probs);
             generatedText += c;
-
+            
             window = generatedText.substring(generatedText.length() - windowLength);
         }
 
         return generatedText;
     }
-
     /** Returns a string representing the map of this language model. */
 	public String toString() {
 		StringBuilder str = new StringBuilder();
